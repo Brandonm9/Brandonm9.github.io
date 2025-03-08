@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>La Búsqueda del Tesoro</title>
+    <style>
+        /* Estilos básicos */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+        }
+
+        .enigma {
+            margin: 20px 0;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .hint {
+            background: #e9ecef;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .final-message {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>La Búsqueda del Tesoro</h1>
+        <div id="phase-container">
+            <!-- Se cargará la fase actual aquí -->
+        </div>
+    </div>
+
+    <script>
+        // Definimos las fases (1-7) y la fase final.
+        // Cada fase contiene: enigma, respuesta correcta y 4 pistas progresivas.
+        const phases = [
+            {
+                phase: 1,
+                title: "El Comienzo del Todo",
+                enigma: `En un inicio inefable, se dio el primer aliento al universo. Si sumerges tu mente en el misterio del principio, hallarás la clave.
+Busca el versículo que inaugura la creación y, como indicación, <strong>primera consonante</strong> del primer nombre que aparece en el verso.`,
+                answer: "D",
+                hints: [
+                    "Piensa en lo que dio origen a todo lo existente.",
+                    "El versículo inicial de la Biblia narra el acto supremo que inició el cosmos.",
+                    "Busca en Génesis 1:1; el nombre del Creador es la clave.",
+                    "En ‘En el principio creó Dios…’, toma la primera consonante de ‘Dios’."
+                ]
+            },
+            {
+                phase: 2,
+                title: "El Camino Ineludible",
+                enigma: `Entre las palabras que cambiaron la historia de la humanidad, se halla la declaración que abre el camino.
+Busca el versículo donde Jesús declara ser el único sendero hacia el Padre y, como indicación, <strong>última vocal</strong> del primer término del enunciado.`,
+                answer: "O",
+                hints: [
+                    "No es solo un sendero cualquiera; es el que conduce al Padre.",
+                    "Revisa las palabras de Jesús en el Evangelio; allí se abre la ruta inconfundible.",
+                    "En Juan 14:6, Jesús dice: ‘Yo soy el camino…’; enfócate en el primer término.",
+                    "Del término ‘Yo’, extrae la última vocal."
+                ]
+            },
+            {
+                phase: 3,
+                title: "El Valor de la Valentía",
+                enigma: `“En momentos de angustia, se alza un grito que repele el temor. Pero no es un simple mandato: es una invitación a la fortaleza.
+Encuentra el versículo que inicia con la negación al miedo y, para extraer la pista, toma la primera consonante del segundo segmento (después de la coma)`,
+                answer: "P",
+                hints: [
+                    "Reflexiona sobre el mandato que repele el temor en medio de la oscuridad.",
+                    "En Isaías 41:10, la primera parte te ordena no temer; pero presta atención a la parte que sigue a la pausa.",
+                    "Después de ‘No temas,’ se inicia la explicación: identifica el primer término del segmento siguiente.",
+                    "Del segmento ‘porque yo estoy contigo’, toma la primera consonante del primer término (‘porque’)."
+                ]
+            },
+            {
+                phase: 4,
+                title: "El Enigma de la Cita en Emojis",
+                enigma: `Descifra la siguiente cita en emojis utilizando la clave que se te proporciona.  
+Cada emoji representa una letra (usa la siguiente equivalencia):  
+<br><br>
+<strong>🐆 = L, 🍎 = A, 🍈 = M, 🥁 = P, 🚀 = R, 🐘 = E, 🐍 = S, 🎐 = U, 🍋 = Z, 🦆 = Q, 🐯 = G, 🎃 = I, 🌟 = Y, 🍊 = O</strong><br><br>
+La secuencia de emojis es:<br>
+<strong>🐯, 🍎, 🍈, 🥁, 🍎, 🚀, 🍎 &nbsp; | &nbsp; 🐘, 🐍 &nbsp; | &nbsp; 🐆, 🎐, 🍋 &nbsp; | &nbsp; 🦆, 🎐, 🐘 &nbsp; | &nbsp; 🐯, 🎐, 🎃, 🍎 &nbsp; | &nbsp; 🌟 &nbsp; | &nbsp; 🐯, 🍊, 🍋, 🍎</strong><br><br>  
+Una vez que la descifres, toma la <strong>primera letra</strong> de la <strong>última palabra</strong> de la cita.`,
+                answer: "G", // Última palabra es "GOZA", primera letra es G.
+                hints: [
+                    "Observa bien la secuencia; cada emoji oculta una letra.",
+                    "Utiliza la clave de equivalencia proporcionada para cada emoji.",
+                    "Ordena los emojis para formar una frase que diga algo similar a ‘LÁMPARA ES LUZ QUE GUÍA Y GOZA’.",
+                    "Una vez que descifres la frase, toma la primera letra de la última palabra (‘GOZA’)."
+                ]
+            },
+            {
+                phase: 5,
+                title: "La Sabiduría Oculta en los Números",
+                enigma: `Resuelve el siguiente cálculo combinando datos bíblicos:  
+Multiplica el día de reposo  por la cantidad de libros del Antiguo Testamento , súmale la cantidad de salmos , réstale la cantidad de libros del Nuevo Testamento  y, finalmente, súmale .  
+Calcula el resultado y, como indicación, toma la <strong>última cifra</strong> del número obtenido.`,
+                answer: "5", // Cálculo: 7×39=273; 273+150=423; 423-27=396; 396+9=405; última cifra: 5.
+                hints: [
+                    "Considera tres conjuntos numéricos fundamentales en la Biblia.",
+                    "Realiza: 7×39, luego añade 150 y resta 27.",
+                    "7×39 = 273; 273+150 = 423; 423-27 = 396; ¿qué debes sumar para llegar a un número final?",
+                    "Suma 9 a 396 y obtendrás 405; la última cifra es 5."
+                ]
+            },
+            {
+                phase: 6,
+                title: "El Llamado a la Unidad Fraternal",
+                enigma: `En un breve pero contundente llamado, se cuestiona la posibilidad de avanzar juntos sin armonía.
+Busca el versículo que pregunta: ‘¿Andarán dos juntos…?’ y, como indicación, toma la primera letra de la última palabra del versículo.`,
+                answer: "A", // Última palabra "acuerdo" → primera letra A.
+                hints: [
+                    "Reflexiona sobre la importancia de la unidad; dos no pueden avanzar sin sintonía.",
+                    "El profeta Amós pregunta si dos pueden caminar juntos sin estar en sintonía.",
+                    "Busca en Amós 3:3 el versículo que interroga la posibilidad de andar juntos.",
+                    "Una vez localizado el verso, toma la primera letra de la última palabra (‘acuerdo’)."
+                ]
+            },
+            {
+                phase: 7,
+                title: "El Enigma Supremo de la Sabiduría",
+                enigma: `Resuelve este desafío numérico:  
+Multiplica la cantidad de libros del Antiguo Testamento  por la cantidad de libros del Nuevo Testamento  y súmale la cantidad de días que tiene una semana .  
+Luego, divide el resultado entre la cantidad de libros del Nuevo Testamento  y, finalmente, toma la <strong>cifra de las decenas</strong> del cociente entero obtenido.`,
+                answer: "3", // Cálculo: 39×27 = 1053; +7 = 1060; 1060÷27 ≈39 (entero); decena de 39 es 3.
+                hints: [
+                    "Integra la multiplicación de dos conjuntos fundamentales y añade el número de días de la semana.",
+                    "Calcula: 39×27, luego suma 7.",
+                    "39×27 = 1053; 1053+7 = 1060; ahora divide 1060 entre 27.",
+                    "El cociente entero es 39; la cifra de las decenas de 39 es 3."
+                ]
+            }
+        ];
+
+        // Fase final: Ingreso del versículo tesoro.
+        const finalPhase = {
+            title: "El Tesoro Final",
+            enigma: `¡Felicidades! Has completado todas las fases.  
+Ahora el tersoro para ti:
+<strong>Proverbios 3:5-6</strong><br>
+“Confía en Jehová con todo tu corazón, Y no te apoyes en tu propia prudencia. Reconócelo en todos tus caminos, Y él enderezará tus veredas.”`,
+            answer: "CONFÍA", // Solo se usará para confirmar que han formado la palabra, luego deberán ingresar el versículo.
+            hints: [] // No se usarán pistas para esta fase.
+        };
+
+        let currentPhase = 0;
+        let keysCollected = []; // Guardaremos las respuestas correctas de cada fase.
+
+        // Referencias al contenedor
+        const phaseContainer = document.getElementById('phase-container');
+
+        // Función para mostrar la fase actual
+        function showPhase() {
+            phaseContainer.innerHTML = '';
+            if (currentPhase < phases.length) {
+                const phaseData = phases[currentPhase];
+                const phaseTitle = document.createElement('h2');
+                phaseTitle.innerText = `Fase ${phaseData.phase}: ${phaseData.title}`;
+                phaseContainer.appendChild(phaseTitle);
+                const enigmaText = document.createElement('div');
+                enigmaText.className = 'enigma';
+                enigmaText.innerHTML = phaseData.enigma;
+                phaseContainer.appendChild(enigmaText);
+                // Input para respuesta
+                const answerInput = document.createElement('input');
+                answerInput.type = 'text';
+                answerInput.id = 'answerInput';
+                answerInput.placeholder = 'Ingresa tu respuesta aquí';
+                phaseContainer.appendChild(answerInput);
+                // Botón de envío
+                const submitButton = document.createElement('button');
+                submitButton.innerText = 'Enviar';
+                submitButton.onclick = () => checkAnswer();
+                phaseContainer.appendChild(submitButton);
+                // Área para mostrar pistas
+                const hintDiv = document.createElement('div');
+                hintDiv.id = 'hintDiv';
+                hintDiv.className = 'hint';
+                phaseContainer.appendChild(hintDiv);
+            } else {
+                // Cuando se completen todas las fases, mostrar la fase final
+                showFinalPhase();
+            }
+        }
+
+        // Variables para controlar las pistas (cada fase tiene 4 pistas)
+        let hintIndex = 0;
+
+        function checkAnswer() {
+            const answerInput = document.getElementById('answerInput');
+            const userAnswer = answerInput.value.trim().toUpperCase();
+            const phaseData = phases[currentPhase];
+            const hintDiv = document.getElementById('hintDiv');
+            if (userAnswer === phaseData.answer.toUpperCase()) {
+                // Respuesta correcta: almacenar clave y avanzar
+                keysCollected.push(phaseData.answer);
+                currentPhase++;
+                hintIndex = 0; // reinicia pistas para la siguiente fase
+                showPhase();
+            } else {
+                // Respuesta incorrecta: mostrar pista progresiva si hay alguna
+                if (hintIndex < phaseData.hints.length) {
+                    hintDiv.style.display = 'block';
+                    hintDiv.innerHTML = `<strong>Pista ${hintIndex + 1}:</strong> ${phaseData.hints[hintIndex]}`;
+                    hintIndex++;
+                } else {
+                    hintDiv.innerHTML = `<strong>Intenta de nuevo.</strong>`;
+                }
+            }
+        }
+
+        // Función para mostrar la fase final
+        function showFinalPhase() {
+            phaseContainer.innerHTML = '';
+            const title = document.createElement('h2');
+            title.innerText = finalPhase.title;
+            phaseContainer.appendChild(title);
+            const enigmaText = document.createElement('div');
+            enigmaText.className = 'enigma';
+            enigmaText.innerHTML = finalPhase.enigma;
+            phaseContainer.appendChild(enigmaText);
+            const finalInput = document.createElement('input');
+            finalInput.type = 'text';
+            finalInput.id = 'finalInput';
+            finalInput.placeholder = 'Ingresa el versículo completo aquí';
+            phaseContainer.appendChild(finalInput);
+            const submitButton = document.createElement('button');
+            submitButton.innerText = 'Enviar Versículo';
+            submitButton.onclick = () => checkFinalAnswer();
+            phaseContainer.appendChild(submitButton);
+        }
+
+        // Función para revisar el versículo final ingresado
+        function checkFinalAnswer() {
+            const finalInput = document.getElementById('finalInput');
+            const userFinal = finalInput.value.trim();
+            // Versículo esperado (se puede hacer comparación más sofisticada)
+            const expected = "Confía en Jehová con todo tu corazón, Y no te apoyes en tu propia prudencia. Reconócelo en todos tus caminos, Y él enderezará tus veredas.";
+            if (userFinal.toLowerCase() === expected.toLowerCase()) {
+                phaseContainer.innerHTML = `<div class="final-message">¡Felicidades! Has desbloqueado el mensaje de victoria y reflexión.</div>`;
+            } else {
+                alert("El versículo ingresado no es correcto. Intenta nuevamente.");
+            }
+        }
+
+        // Iniciar la primera fase
+        showPhase();
+    </script>
+</body>
+
+</html>
